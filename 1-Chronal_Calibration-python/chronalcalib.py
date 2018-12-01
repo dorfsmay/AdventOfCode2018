@@ -1,20 +1,18 @@
 #!/usr/bin/env python3
 
 import sys
-import logging
-
 
 def get_puzzle_input(file_input):
     data = open(file_input).readlines()
     data = ( x.strip() for x in data )
     data = [ int(x) for x in data if len(x) > 0 ]
-    return data
+    return tuple(data)
 
 def calculate_resulting_freq(data):
     return sum(data)
 
 def frist_duplicate_freq(data):
-    results = list()
+    results = set()
     runs = 0
     result = 0
     while True:
@@ -27,7 +25,7 @@ def frist_duplicate_freq(data):
                 print()
                 return result, runs
             else:
-                results.append(result)
+                results.add(result)
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
