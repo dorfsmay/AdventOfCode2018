@@ -5,6 +5,8 @@ import copy
 import re
 
 canvas = dict()
+nonoverlapping = set()
+
 pattern = re.compile('\#(.*) \@ (.*),(.*): (.*)x(.*)')
 
 def canvas_add_point(id_, h, v):
@@ -13,6 +15,9 @@ def canvas_add_point(id_, h, v):
     if v not in canvas[h]:
         canvas[h][v] = set()
     canvas[h][v].add(id_)
+    if len(canvas[h][v]) > 1:
+        for p in canvas[h][v]:
+            nonoverlapping.discard(p)
 
 class Patch:
     def __init__(self, id_, hmargin, vmargin, length, height):
@@ -21,6 +26,7 @@ class Patch:
         self.vmargin = int(vmargin)
         self.length = int(length)
         self.height = int(height)
+        nonoverlapping.add(self.id_)
         self.populate_canvas()
 
     def __repr__(self):
@@ -55,5 +61,6 @@ if __name__ == "__main__":
         print('\nMissing data file.\n', file=sys.stderr)
         sys.exit(1)
     get_puzzle_input(sys.argv[1])
-    print(overlapping())
+    print("Number of square where fabric overlap:", overlapping())
+    print("id of non-overlapping(s) fabric:", nonoverlapping)
 
