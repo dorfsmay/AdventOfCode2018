@@ -1,4 +1,4 @@
-from inventory import count_dupes, checksum
+from inventory import count_dupes, checksum, find_boxes, matching_ids
 
 def test_none():
     assert count_dupes("abcdef") == (False, False)
@@ -27,4 +27,30 @@ def test_quadruples():
 def test_checksum():
     all = ("abcdef", "abbcde", "aabcdd", "abcccd", "ababab", "bababc", "abcdee", "aaaabc")
     assert checksum(all) == 12
+
+# The boxes will have IDs which differ by exactly one character at the same position in both strings.
+def test_matching_same():
+    assert matching_ids('fghij', 'fghij') ==  None
+
+def test_matching_middle():
+    assert matching_ids('fghij', 'fguij') ==  'fgij'
+
+def test_matching_begining():
+    assert matching_ids('xghij', 'fghij') ==  'ghij'
+
+def test_matching_end():
+    assert matching_ids('fghir', 'fghij') ==  'fghi'
+
+def test_matching_good_2():
+    assert matching_ids('fghij', 'ughij') ==  'ghij'
+
+def test_box_2_ids():
+    assert find_boxes(['fghij', 'fguij']) == set(('fgij',))
+
+def test_negative_2_ids():
+    assert find_boxes(['fghij', 'fgiuj']) == set()
+
+def test_many_ids():
+    all = ('fghij', 'abcde', 'acbde', 'fguij', 'aaecdb', 'abdde')
+    assert find_boxes(all) == set(('fgij', 'abde'))
 
