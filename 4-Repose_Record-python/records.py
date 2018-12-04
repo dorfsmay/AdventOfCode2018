@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import sys
-import copy
 import re
 
 
@@ -40,7 +39,7 @@ def parse(data):
         match = pattern1.match(line)
         ye, mo, da, h, m, rest = match.groups()
         if rest.startswith('Guard'):
-            action = 'begins'
+            #action = 'begins'
             id_ = int(pattern2.match(rest).groups()[0])
             if id_ not in Guard.all:
                 Guard(id_)
@@ -51,7 +50,7 @@ def parse(data):
             else:
                 date = str(mo) + str(da)
                 Guard.all[id_].add_sleep(date, int(fell), int(m))
-        #print(ye, mo, da, h, m, id_, action)
+    remove_non_sleeper()
 
 def biggest_sleeper():
     d = Guard.all
@@ -65,8 +64,23 @@ def most_slept_minute(id_):
     minute = freqs[frequence]
     return frequence, minute
 
+def remove_non_sleeper():
+    zero = [ k for k in Guard.all.keys() if Guard.all[k].asleep == 0 ]
+    for z in zero:
+        del Guard.all[z]
 
-    
+def most_freq_sleeper():
+    freq = 0
+    minute = None
+    this_id = None
+    for k in Guard.all.keys():
+        f, m = most_slept_minute(k)
+        if f > freq:
+            freq = f
+            minute = m
+            this_id = k
+    return this_id, minute
+
 
 
 if __name__ == "__main__":
@@ -78,4 +92,7 @@ if __name__ == "__main__":
     id_ = biggest_sleeper()
     print('ID of biggest sleeper: ', id_)
     print('minutes most slept: ', most_slept_minute(id_)[1])
+    id_, m = most_freq_sleeper()
+    print('ID of guard who slept the most on a given minute:', id_)
+    print('minute:', m)
 
