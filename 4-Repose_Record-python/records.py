@@ -77,5 +77,5 @@ if __name__ == "__main__":
     parse(data)
     id_ = biggest_sleeper()
     print('ID of biggest sleeper: ', id_)
-    print('minutes most slept: ', most_slept_minute(id_)[0])
+    print('minutes most slept: ', most_slept_minute(id_)[1])
 
