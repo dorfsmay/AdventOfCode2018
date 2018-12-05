@@ -2,6 +2,8 @@
 
 import io
 import sys
+import re
+import string
 
 
 def get_puzzle_input(file_input):
@@ -38,6 +40,13 @@ def multi_passes(data):
         reductions, data = one_pass(data)
     return loops, data
 
+def shortest(data):
+    lengths = list()
+    for char in string.ascii_lowercase:
+        short_data = re.sub(char, '', data, flags=re.IGNORECASE)
+        lengths.append(len(multi_passes(short_data)[1]))
+    return min(lengths)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -46,4 +55,5 @@ if __name__ == "__main__":
     data = get_puzzle_input(sys.argv[1])
     loops, new_data = multi_passes(data)
     print('length: {} in {} loops'.format(len(new_data), loops))
+    print('shortest:', shortest(data))
 
