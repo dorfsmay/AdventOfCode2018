@@ -1,4 +1,4 @@
-from reduction import one_pass, multi_passes
+from reduction_passes import one_pass, multi_passes
 
 def test_aa():
     assert one_pass("aa") == (0, 'aa')
