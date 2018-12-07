@@ -88,8 +88,4 @@ if __name__ == "__main__":
     data = get_puzzle_input(args.args)
     organise(data)
     print(''.join(follow_tree(firsts)))
-    #for a,b in data:
-    #    print('{} -> {};'.format(a, b))
-
-
 
