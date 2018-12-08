@@ -23,6 +23,7 @@ class Node():
         self.n_meta = n_meta
         self.childs = list()
         self.metas = list()
+        self.value = 0
 
 def create_node(parent, data):
     n_child, n_meta = data[0:2]
@@ -40,6 +41,19 @@ def sum_meta():
         total += sum(n.metas)
     return total
 
+def calculate_value(self):
+    value = 0 
+    if self.n_child == 0:
+        self.value = sum(self.metas)
+        return self.value
+    else:
+        for m in self.metas:
+            if m <= len(self.childs):
+                value += calculate_value(self.childs[m-1])
+    self.value = value
+    return value
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--debug", "-d",
@@ -56,4 +70,6 @@ if __name__ == "__main__":
     data = get_puzzle_input(args.args)
     create_node(None, data)
     print('Total metas: {}'.format(sum_meta()))
+    print('Value of root node:', calculate_value(Node.all_[0]))
+
 
