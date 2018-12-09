@@ -1,4 +1,5 @@
-from mania import high_score
+from mania_object_linked_list import high_score
+
 
 def test_full_1():
     assert high_score(9, 25) == 32
