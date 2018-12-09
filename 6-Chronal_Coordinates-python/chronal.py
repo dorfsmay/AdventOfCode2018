@@ -6,10 +6,12 @@ import logging
 
 logging.basicConfig(format='==> %(module)s, %(funcName)s %(message)s', level=logging.ERROR)
 
+maxdistance = 32
 grid = dict()
 # OrderedDict is useful for debugging, because debug happens in the
 # natural order.
 #grid = collections.OrderedDict()
+safe_zone = None
 maxx = maxy = minx = miny = None
 edge = None
 
@@ -47,7 +49,7 @@ class Locations:
         self.is_point = False
         self.closest_points = list()
         self.closest_distance = 0
-        self.total_dist = None
+        self.totald = 0
 
     def add_point(self):
         self.is_point = True
@@ -64,6 +66,11 @@ def add_points(data):
 
 def distance(a, b):
     return abs(b.x - a.x) + abs(b.y - a.y)
+
+def get_safe_area():
+    global safe_zone
+    safe_zone = [ z.totald for z in grid.values() if z.totald < maxdistance ]
+    return safe_zone
 
 def print_grid():
     print()
@@ -83,6 +90,21 @@ def print_grid():
                     line += str(loc.closest_points[0])
                 else:
                     line += '.'
+        print(line)
+    print()
+
+def print_safe_zone():
+    print()
+    for y in range(miny-1, maxy+2):
+        line = ''
+        for x in range(minx-1, maxx+2):
+            loc = grid[(x,y)]
+            if loc.is_point:
+                line += 'X'
+            elif loc.totald < maxdistance:
+                line += '#'
+            else:
+                line += '.'
         print(line)
     print()
 
@@ -118,9 +140,10 @@ def most_single():
 
 def calculate_distances():
     for pos, loc in grid.items():
-        if not loc.is_point:
-            for point in Points.all_:
-                d = distance(loc, Points.all_[point])
+        for point in Points.all_:
+            d = distance(loc, Points.all_[point])
+            loc.totald += d
+            if not loc.is_point:
                 logging.debug('location: {}, Pt id: {}'.format(pos, point))
                 logging.debug('new: {}, curr: {}, pts: {}'.format(d, loc.closest_distance, loc.closest_points))
                 if loc.closest_distance == 0:
@@ -155,6 +178,8 @@ if __name__ == "__main__":
     if args.debug:
         logging.getLogger().setLevel(logging.DEBUG)
 
+    if not 'test' in args.args:
+        maxdistance = 10000
     data = get_puzzle_input(args.args)
     initialize_grid()
     add_points(data)
@@ -163,5 +188,8 @@ if __name__ == "__main__":
     #print_grid()
     singles = most_single()
     print('Largest finite area:', singles)
+    safe_zone = get_safe_area()
+    #print_safe_zone()
+    print('Size of safe zone (<{}): {}'.format(maxdistance, len(safe_zone)))
 
 
