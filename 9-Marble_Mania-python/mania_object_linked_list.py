@@ -76,14 +76,17 @@ def high_score(num_players, last_marble):
     new_marble = 1
 
     for p in itertools.cycle(range(1, num_players+1)):
-        logging.debug('[{}] {}'.format(p, Marbles.str()))
+        # Testing log level to prevent Marbles.str to be executed at
+        # log level higher than DEBUG
+        if logging.getLogger().level == logging.DEBUG:
+            logging.debug('[%s] %s', p, Marbles.str())
         new_marble += 1
 
         if new_marble % 23 == 0:
            players[p] += new_marble
            remove = cur.walk(-7)
            cur = remove.aft
-           logging.debug('Removing marble # {}. New cur: {}'.format(remove, cur))
+           logging.debug('Removing marble # %s. New cur: %s', remove, cur)
            players[p] += remove.value
            remove.remove()
         else:
