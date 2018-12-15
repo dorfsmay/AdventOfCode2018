@@ -6,7 +6,6 @@ import argparse
 
 
 class Marbles:
-    length = 0
     zero = None
 
     @classmethod
@@ -15,38 +14,14 @@ class Marbles:
         cls.zero.prev = cls.zero.aft = cls.zero
         return cls.zero
 
-    @classmethod
-    def decrease(cls):
-        cls.length -= 1
-
-    @classmethod
-    def increase(cls):
-        cls.length += 1
-
-    @classmethod
-    def str(cls):
-        values = list()
-        this = cls.zero
-        while True:
-            values.append(str(this.value))
-            this = this.aft
-            if this == cls.zero:
-                break
-        return ', '.join(values)
-
     def __init__(self, value, prev=None, aft=None):
         self.prev = prev
         self.aft = aft
         self.value = value
-        self.increase()
-
-    def __repr__(self):
-        return str(self.value)
 
     def remove(self):
         self.prev.aft = self.aft
         self.aft.prev = self.prev
-        self.decrease()
 
     def insert(self, value):
         new = Marbles(value, self.prev, self)

@@ -1,4 +1,4 @@
-from mania_object_linked_list import high_score
+from mania_obj_no_debug import high_score
 
 
 def test_full_1():

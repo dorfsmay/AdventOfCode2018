@@ -2,7 +2,7 @@
 
 import sys
 import cProfile
-from mania_object_linked_list import high_score
+from mania_obj_no_debug import high_score
 
 num = 5000
 if len(sys.argv) >= 2:

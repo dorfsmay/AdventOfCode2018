@@ -8,7 +8,6 @@ import logging
 logging.basicConfig(format='==> %(module)s, %(funcName)s %(message)s', level=logging.ERROR)
 
 class Marbles:
-    length = 0
     zero = None
 
     @classmethod
@@ -16,14 +15,6 @@ class Marbles:
         cls.zero = Marbles(0)
         cls.zero.prev = cls.zero.aft = cls.zero
         return cls.zero
-
-    @classmethod
-    def decrease(cls):
-        cls.length -= 1
-
-    @classmethod
-    def increase(cls):
-        cls.length += 1
 
     @classmethod
     def str(cls):
@@ -40,7 +31,6 @@ class Marbles:
         self.prev = prev
         self.aft = aft
         self.value = value
-        self.increase()
 
     def __repr__(self):
         return str(self.value)
@@ -48,7 +38,6 @@ class Marbles:
     def remove(self):
         self.prev.aft = self.aft
         self.aft.prev = self.prev
-        self.decrease()
 
     def insert(self, value):
         new = Marbles(value, self.prev, self)
