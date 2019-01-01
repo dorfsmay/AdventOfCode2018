@@ -1,5 +1,5 @@
 import pytest
-from charge import calc_power, populate_grid, calc_square_power, highest_3_3
+from charge import calc_power, populate_grid, calc_3_3_square_max_power, highest_3_3, calc_power_n_square, calc_abs_max_power
 
 @pytest.fixture
 def grid_18():
@@ -9,7 +9,7 @@ def grid_18():
 
 @pytest.fixture
 def square_18(grid_18):
-    return calc_square_power(grid_18)
+    return calc_3_3_square_max_power(grid_18)
 
 @pytest.fixture
 def grid_42():
@@ -19,7 +19,7 @@ def grid_42():
 
 @pytest.fixture
 def square_42(grid_42):
-    return calc_square_power(grid_42)
+    return calc_3_3_square_max_power(grid_42)
 
 def test_cp_01():
     assert calc_power((3,5), 8 ) == 4
@@ -77,4 +77,13 @@ def test_highest_1(square_18):
 
 def test_highest_2(square_42):
     assert highest_3_3(square_42[1]) == (21, 61)
+
+def test_power_n_square_1(grid_18):
+    assert calc_power_n_square(grid_18, 33, 45, 3) == 29
+
+def test_max_power_18(grid_18):
+    assert calc_abs_max_power(grid_18) == (90, 269, 16)
+
+def test_max_power_42(grid_42):
+    assert calc_abs_max_power(grid_42) == (232, 251, 12)
 
