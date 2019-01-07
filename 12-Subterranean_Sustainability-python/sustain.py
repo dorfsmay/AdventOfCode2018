@@ -48,16 +48,6 @@ class pot:
         self.nex = new
         return new
 
-    def delete_collection(self):
-        curr = self.get_right_most()
-        while True:
-            if curr.prev:
-                p = curr
-                curr = curr.prev
-                del p
-            else:
-               break 
-
     def print_collection(self):
         curr = self.get_left_most()
         while True:
@@ -79,12 +69,42 @@ def s_to_b(c):
     return True if c == '#' else False
 
 def pad_pots(p):
+    # We only need two extra empty pot on each end
+    # Find left-most True value (plant)
     first = p.get_left_most()
-    first = first.insert()
-    first = first.insert()
+    curr = first
+    while curr.state is False:
+        curr = curr.nex
+    # move back 2 step
+    if curr.prev:
+        curr = curr.prev
+        if curr.prev:
+            curr = curr.prev
+        else:
+            # insert new one if there's only one
+            curr = curr.insert()
+    else:
+        # insert 2 empty pots
+        curr = curr.insert()
+        curr = curr.insert()
+    # severe link to potential previous pots
+    curr.prev = None
+    first = curr
+
     last = p.get_right_most()
-    last = last.append()
-    last.append()
+    curr = last
+    while curr.state is False:
+        curr = curr.prev
+    if curr.nex:
+        curr = curr.nex
+        if curr.nex:
+            curr = curr.nex
+        else:
+            curr = curr.append()
+    else:
+        curr = curr.append()
+        curr = curr.append()
+    curr.nex = None
     return first
 
 def str_to_collection(s):
@@ -148,13 +168,13 @@ def load_file(fn):
 if __name__ == "__main__":
     gen_0, patterns = load_file(sys.argv[1])
     gen_first = gen_0
-    #gen_first.print_collection()
+    gen_first.print_collection()
     for i in range(1, 21):
         gen_first = new_gen(gen_first)
+        gen_first.print_collection()
     #gen_first.print_collection()
     print('Total sum of index with flowers after 20 generations: {}'.format(sum_idx(gen_first)))
-    for i in range(1, 50000000001):
-        gen_first = new_gen(gen_first)
-    print('Total sum of index with flowers after 50000000000 generations: {}'.format(sum_idx(gen_first)))
-
+#    for i in range(1, 50000000001):
+#        gen_first = new_gen(gen_first)
+#    print('Total sum of index with flowers after 50000000000 generations: {}'.format(sum_idx(gen_first)))
 
