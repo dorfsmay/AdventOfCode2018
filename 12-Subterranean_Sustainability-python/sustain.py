@@ -12,6 +12,17 @@ class pot:
         self.nex = nex
         self.idx = idx
 
+    def get_states(self):
+        states = list()
+        curr = self.get_left_most()
+        while True:
+            states.append(curr.state)
+            if not curr.nex:
+                break
+            curr = curr.nex
+        return tuple(states)
+
+
     def get_quint(self):
         c = self.state
         a = b = d = e = False
@@ -53,7 +64,7 @@ class pot:
         while True:
             #print(curr.idx)
             if curr.idx == 0:
-                print('\033[1m', end='')
+                print('\033[7m', end='')
             if curr.state:
                 print('#', end='')
             else:
@@ -163,6 +174,21 @@ def load_file(fn):
                 patterns.append(pattern)
     return first, tuple(patterns)
 
+def stabilise(f):
+    '''Does result set eventually stabilise (glides)?
+    '''
+    gen1 = f
+    counter = 0
+    while True:
+        state1 = gen1.get_states()
+        gen2 = new_gen(gen1)
+        state2 = gen2.get_states()
+        gen2.print_collection()
+        if state2 == state1:
+            return gen1, counter
+        counter += 1
+        gen1 = gen2
+
 
 
 if __name__ == "__main__":
@@ -174,7 +200,8 @@ if __name__ == "__main__":
         gen_first.print_collection()
     #gen_first.print_collection()
     print('Total sum of index with flowers after 20 generations: {}'.format(sum_idx(gen_first)))
-#    for i in range(1, 50000000001):
-#        gen_first = new_gen(gen_first)
-#    print('Total sum of index with flowers after 50000000000 generations: {}'.format(sum_idx(gen_first)))
+    gen_first, generations = stabilise(gen_0)
+    print('Stabilised on {} generation.'.format(generations))
+    print('Total sum of index at generation {}: {}'.format(generations, sum_idx(gen_first)))
+    print('Range from {} to {}.'.format(gen_first.get_left_most().idx, gen_first.get_right_most().idx))
 
