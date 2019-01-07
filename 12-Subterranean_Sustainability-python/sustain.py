@@ -118,9 +118,9 @@ def pad_pots(p):
     curr.nex = None
     return first
 
-def str_to_collection(s):
+def str_to_collection(s, idx=0):
     s = s.strip()
-    first = pot(state=s_to_b(s[0]), idx=0)
+    first = pot(state=s_to_b(s[0]), idx=idx)
     prev = first
     for letter in s[1:]:
         state = s_to_b(letter)
@@ -128,6 +128,20 @@ def str_to_collection(s):
         last = prev
     first = pad_pots(first)
     return first
+
+def collection_to_str(f):
+    s = ''
+    curr = f
+    while True:
+        if curr.state:
+            s += '#'
+        else:
+            s += '.'
+        if curr.nex:
+            curr = curr.nex
+        else:
+            break
+    return s
 
 def new_gen(prev_gen_first):
     old = prev_gen_first.get_left_most()
@@ -183,6 +197,7 @@ def stabilise(f):
         state1 = gen1.get_states()
         gen2 = new_gen(gen1)
         state2 = gen2.get_states()
+        print(gen2.idx, '', end='')
         gen2.print_collection()
         if state2 == state1:
             return gen1, counter
@@ -200,8 +215,15 @@ if __name__ == "__main__":
         gen_first.print_collection()
     #gen_first.print_collection()
     print('Total sum of index with flowers after 20 generations: {}'.format(sum_idx(gen_first)))
-    gen_first, generations = stabilise(gen_0)
+    gen_stab, generations = stabilise(gen_0)
     print('Stabilised on {} generation.'.format(generations))
     print('Total sum of index at generation {}: {}'.format(generations, sum_idx(gen_first)))
     print('Range from {} to {}.'.format(gen_first.get_left_most().idx, gen_first.get_right_most().idx))
+    gen_next = new_gen(gen_stab)
+    glide = gen_next.idx - gen_stab.idx
+    final_idx =  gen_stab.idx + (50000000000 - generations) * glide
+    s = collection_to_str(gen_stab)
+    final = str_to_collection(s, idx=final_idx)
+    print('Total sum of index with flowers after 50b generations: {}'.format(sum_idx(final)))
+
 
